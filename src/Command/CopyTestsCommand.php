@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of the browscap-helper package.
  *
- * Copyright (c) 2015-2023, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2015-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +16,6 @@ namespace BrowscapHelper\Command;
 use BrowscapHelper\Helper\ExistingTestsLoader;
 use BrowscapHelper\Helper\ExistingTestsRemover;
 use BrowscapHelper\Helper\RewriteTests;
-use BrowscapHelper\Source\BrowscapSource;
 use BrowscapHelper\Source\CrawlerDetectSource;
 use BrowscapHelper\Source\DonatjSource;
 use BrowscapHelper\Source\JsonFileSource;
@@ -27,12 +27,13 @@ use BrowscapHelper\Source\TxtFileSource;
 use BrowscapHelper\Source\Ua\UserAgent;
 use BrowscapHelper\Source\WhichBrowserSource;
 use BrowscapHelper\Source\WootheeSource;
-use BrowscapHelper\Source\ZsxsoftSource;
+use BrowscapHelper\Traits\FilterHeaderTrait;
 use Ergebnis\Json\Normalizer\Exception\InvalidIndentSize;
 use Ergebnis\Json\Normalizer\Exception\InvalidIndentStyle;
 use Ergebnis\Json\Normalizer\Exception\InvalidJsonEncodeOptions;
 use Ergebnis\Json\Normalizer\Exception\InvalidNewLineString;
 use JsonException;
+use Override;
 use PDO;
 use PDOException;
 use RuntimeException;
@@ -45,16 +46,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
 
 use function array_key_exists;
-use function array_map;
 use function count;
 use function json_encode;
 use function sprintf;
-use function trim;
 
 use const JSON_THROW_ON_ERROR;
 
 final class CopyTestsCommand extends Command
 {
+    use FilterHeaderTrait;
+
     /** @throws LogicException */
     public function __construct(
         private readonly ExistingTestsLoader $testsLoader,
@@ -70,6 +71,7 @@ final class CopyTestsCommand extends Command
      *
      * @throws InvalidArgumentException
      */
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -109,6 +111,7 @@ final class CopyTestsCommand extends Command
      * @throws \LogicException
      * @throws RuntimeException
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $testSource = 'tests';
@@ -119,17 +122,17 @@ final class CopyTestsCommand extends Command
         $output->writeln('reading already existing tests ...', OutputInterface::VERBOSITY_NORMAL);
 
         foreach ($this->testsLoader->getProperties($output, $sources) as $row) {
+            try {
+                $row['headers'] = $this->filterHeaders($row['headers']);
+            } catch (UnexpectedValueException $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e));
+
+                continue;
+            }
+
             $seachHeader = (string) UserAgent::fromHeaderArray($row['headers']);
 
             if (array_key_exists($seachHeader, $txtChecks)) {
-                $output->writeln(
-                    '<error>' . sprintf(
-                        'Header "%s" added more than once --> skipped',
-                        $seachHeader,
-                    ) . '</error>',
-                    OutputInterface::VERBOSITY_NORMAL,
-                );
-
                 continue;
             }
 
@@ -143,14 +146,12 @@ final class CopyTestsCommand extends Command
         $output->writeln('init sources ...', OutputInterface::VERBOSITY_NORMAL);
 
         $sources = [
-            new BrowscapSource(),
             new CrawlerDetectSource(),
             new DonatjSource(),
             new MatomoSource(),
             new MobileDetectSource(),
             new WhichBrowserSource(),
             new WootheeSource(),
-            new ZsxsoftSource(),
             new TxtFileSource($sourcesDirectory),
             new TxtCounterFileSource($sourcesDirectory),
         ];
@@ -190,10 +191,13 @@ final class CopyTestsCommand extends Command
         $txtTotalCounter = 0;
 
         foreach ($this->testsLoader->getProperties($output, $sources) as $test) {
-            $test['headers'] = array_map(
-                static fn (string $header) => trim($header),
-                $test['headers'],
-            );
+            try {
+                $test['headers'] = $this->filterHeaders($test['headers']);
+            } catch (UnexpectedValueException $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e));
+
+                continue;
+            }
 
             $seachHeader = (string) UserAgent::fromHeaderArray($test['headers']);
 

@@ -12,22 +12,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
-      time: "03:00"
+      time: "04:00"
       timezone: "Europe/Berlin"
-
-    groups:
-      # Specify a name for the group, which will be used in pull request titles
-      # and branch names
-      minor-patch-dependencies:
-        # Define patterns to include dependencies in the group (based on
-        # dependency name)
-        patterns:
-          - "*"
-        # update-types:
-        #   - "minor"
-        #   - "patch"
-        # exclude-patterns:
-        #   - "gc_ruboconfig"
 
     open-pull-requests-limit: 10
 
@@ -49,24 +35,10 @@ updates:
       prefix: "composer"
 
     ignore:
-      - dependency-name: "psr/log"
-        versions:
-          - ">= 0"
-      - dependency-name: "psr/simple-cache"
-        versions:
-          - ">= 0"
-      - dependency-name: "psr/cache"
-        versions:
-          - ">= 0"
-      - dependency-name: "symfony/cache"
-        versions:
-          - ">= 0"
       - dependency-name: "endorphin-studio/browser-detector-tests"
-        versions:
-          - ">= 0"
-#      - dependency-name: symfony/yaml
-#        versions:
-#          - ">= 0"
+
+    # Disable rebasing for all pull requests
+    rebase-strategy: "disabled"
 
   - package-ecosystem: "github-actions"
 
@@ -75,22 +47,8 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
-      time: "03:00"
+      time: "04:00"
       timezone: "Europe/Berlin"
-
-    groups:
-      # Specify a name for the group, which will be used in pull request titles
-      # and branch names
-      minor-patch-dependencies:
-        # Define patterns to include dependencies in the group (based on
-        # dependency name)
-        patterns:
-          - "*"
-        # update-types:
-        #   - "minor"
-        #   - "patch"
-        # exclude-patterns:
-        #   - "gc_ruboconfig"
 
     open-pull-requests-limit: 10
 
@@ -107,3 +65,9 @@ updates:
 
     commit-message:
       prefix: "github-actions"
+
+    ignore:
+      - dependency-name: "mimmi20/ci"
+
+    # Disable rebasing for all pull requests
+    rebase-strategy: "disabled"

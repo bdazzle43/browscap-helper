@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of the browscap-helper package.
  *
- * Copyright (c) 2015-2023, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2015-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,6 +23,7 @@ use Ergebnis\Json\Normalizer\Exception\InvalidIndentSize;
 use Ergebnis\Json\Normalizer\Exception\InvalidIndentStyle;
 use Ergebnis\Json\Normalizer\Exception\InvalidJsonEncodeOptions;
 use Ergebnis\Json\Normalizer\Exception\InvalidNewLineString;
+use Override;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -52,6 +54,7 @@ final class ConvertLogsCommand extends Command
      *
      * @throws InvalidArgumentException
      */
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -93,6 +96,7 @@ final class ConvertLogsCommand extends Command
      * @throws \LogicException
      * @throws RuntimeException
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $sourcesDirectory = $input->getOption('resources');

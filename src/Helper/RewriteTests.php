@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of the browscap-helper package.
  *
- * Copyright (c) 2015-2023, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2015-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,7 +18,6 @@ use Ergebnis\Json\Normalizer\Exception\InvalidIndentSize;
 use Ergebnis\Json\Normalizer\Exception\InvalidIndentStyle;
 use Ergebnis\Json\Normalizer\Exception\InvalidJsonEncodeOptions;
 use Ergebnis\Json\Normalizer\Exception\InvalidNewLineString;
-use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
@@ -25,14 +25,14 @@ use UnexpectedValueException;
 use function array_chunk;
 use function array_keys;
 use function file_put_contents;
+use function mb_str_pad;
 use function mb_strlen;
 use function sprintf;
-use function str_pad;
 
-final class RewriteTests
+final readonly class RewriteTests
 {
     /** @throws void */
-    public function __construct(private readonly JsonNormalizer $jsonNormalizer)
+    public function __construct(private JsonNormalizer $jsonNormalizer)
     {
         // nothing to do
     }
@@ -56,7 +56,7 @@ final class RewriteTests
         $messageLength = mb_strlen($message);
 
         $output->writeln(
-            str_pad(string: $message, length: $messageLength),
+            mb_str_pad(string: $message, length: $messageLength),
             OutputInterface::VERBOSITY_NORMAL,
         );
 
@@ -73,7 +73,7 @@ final class RewriteTests
             }
 
             $output->write(
-                "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+                "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
                 false,
                 OutputInterface::VERBOSITY_VERY_VERBOSE,
             );
@@ -95,7 +95,7 @@ final class RewriteTests
             }
 
             $output->write(
-                "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+                "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
                 false,
                 OutputInterface::VERBOSITY_VERY_VERBOSE,
             );
@@ -107,7 +107,7 @@ final class RewriteTests
                     $message,
                     $messageLength,
                 );
-            } catch (InvalidArgumentException | RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
                 $output->writeln('<error>' . $e . '</error>', OutputInterface::VERBOSITY_NORMAL);
 
@@ -131,7 +131,7 @@ final class RewriteTests
             }
 
             $output->write(
-                "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+                "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
                 false,
                 OutputInterface::VERBOSITY_VERY_VERBOSE,
             );
@@ -146,7 +146,7 @@ final class RewriteTests
         }
 
         $output->writeln(
-            "\r" . '<info>' . str_pad(string: $message, length: $messageLength) . '</info>',
+            "\r" . '<info>' . mb_str_pad(string: $message, length: $messageLength) . '</info>',
             OutputInterface::VERBOSITY_VERBOSE,
         );
     }

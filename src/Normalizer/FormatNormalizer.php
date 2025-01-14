@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of the browscap-helper package.
  *
- * Copyright (c) 2015-2023, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2015-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,6 +20,7 @@ use Ergebnis\Json\Normalizer\Format\Indent;
 use Ergebnis\Json\Normalizer\Format\NewLine;
 use Ergebnis\Json\Normalizer\Normalizer;
 use JsonException;
+use Override;
 use UnexpectedValueException;
 
 use function array_key_exists;
@@ -35,18 +37,18 @@ use function str_replace;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
 
-/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
-final class FormatNormalizer implements Normalizer
+final readonly class FormatNormalizer implements Normalizer
 {
-    private const PLACE_HOLDER = '$ni$';
+    private const string PLACE_HOLDER = '$ni$';
 
     /** @throws UnexpectedValueException */
-    public function __construct(private readonly Format $format)
+    public function __construct(private Format $format)
     {
         $this->checkPrettyPrint();
     }
 
     /** @throws NotJson */
+    #[Override]
     public function normalize(Json $json): Json
     {
         try {

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * This file is part of the browscap-helper package.
  *
- * Copyright (c) 2015-2023, Thomas Mueller <mimmi20@live.de>
+ * Copyright (c) 2015-2025, Thomas Mueller <mimmi20@live.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,9 +35,9 @@ use UnexpectedValueException;
 
 use function assert;
 use function json_encode;
+use function mb_str_pad;
 use function mb_strlen;
 use function sprintf;
-use function str_pad;
 
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
@@ -62,7 +63,7 @@ final class JsonNormalizer
         $messageLength = mb_strlen($message2);
 
         $output->write(
-            "\r" . str_pad(string: $message2, length: $messageLength),
+            "\r" . mb_str_pad(string: $message2, length: $messageLength),
             false,
             OutputInterface::VERBOSITY_VERBOSE,
         );
@@ -71,7 +72,7 @@ final class JsonNormalizer
         $messageLength = mb_strlen($message2);
 
         $output->write(
-            "\r" . str_pad(string: $message2, length: $messageLength),
+            "\r" . mb_str_pad(string: $message2, length: $messageLength),
             false,
             OutputInterface::VERBOSITY_VERBOSE,
         );
@@ -92,13 +93,13 @@ final class JsonNormalizer
         $message2 = $message . ' - done';
 
         $output->writeln(
-            "\r" . str_pad(string: $message2, length: $messageLength),
+            "\r" . mb_str_pad(string: $message2, length: $messageLength),
             OutputInterface::VERBOSITY_VERBOSE,
         );
     }
 
     /**
-     * @param array<int, array<string, string>> $headers
+     * @param array<int|string, array<string, string>|string> $headers
      *
      * @throws SchemaUriReferencesInvalidJsonDocument
      * @throws SchemaUriReferencesDocumentWithInvalidMediaType
@@ -120,7 +121,7 @@ final class JsonNormalizer
         }
 
         $output->write(
-            "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+            "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
             false,
             OutputInterface::VERBOSITY_VERY_VERBOSE,
         );
@@ -156,7 +157,7 @@ final class JsonNormalizer
         }
 
         $output->write(
-            "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+            "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
             false,
             OutputInterface::VERBOSITY_VERY_VERBOSE,
         );
@@ -169,7 +170,7 @@ final class JsonNormalizer
             }
 
             $output->write(
-                "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+                "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
                 false,
                 OutputInterface::VERBOSITY_VERY_VERBOSE,
             );
@@ -185,7 +186,7 @@ final class JsonNormalizer
         }
 
         $output->write(
-            "\r" . '<info>' . str_pad(string: $message2, length: $messageLength) . '</info>',
+            "\r" . '<info>' . mb_str_pad(string: $message2, length: $messageLength) . '</info>',
             false,
             OutputInterface::VERBOSITY_VERY_VERBOSE,
         );
